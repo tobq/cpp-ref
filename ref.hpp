@@ -1,16 +1,23 @@
+//
+// Created by tobia on 21/02/2021.
+//
+#pragma once
+
+
 /**
  * `operator.()` not here yet, so using `operator->()` until then
  */
+
 template<class T>
 class ref {
     T &r;
 
-    inline auto ptr() {
-        return &r;
+    inline auto ptr() const {
+        return (T const *) std::addressof(r);
     }
 
-    inline auto ptr() const {
-        return (T const &) &r;
+    inline auto ptr() {
+        return std::addressof(r);
     }
 
 public:
@@ -41,4 +48,13 @@ public:
     inline auto operator->() const {
         return ptr();
     }
+};
+
+/**
+ * specialization to flatten refs to refs
+ * @tparam T type of template parameter ref (ref<T>)
+ */
+template<class T>
+struct ref<ref<T>> : ref<T> {
+    using ref<T>::ref;
 };
