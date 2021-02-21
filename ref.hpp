@@ -5,7 +5,10 @@
 
 
 /**
+ * Properly propagates const-ness (even as a class field - unlike native refs)
+ * 
  * `operator.()` not here yet, so using `operator->()` until then
+ * @tparam referenced type
  */
 
 template<class T>
@@ -56,5 +59,5 @@ public:
  */
 template<class T>
 struct ref<ref<T>> : ref<T> {
-    using ref<T>::ref;
+    constexpr ref(ref<T> r) : ref<T>(r) {} // NOLINT(google-explicit-constructor)
 };
